@@ -65,8 +65,15 @@
         /**
          *
          */
-        public function loadAll($order) {
+        public function loadAll($order = null) {
             return ($order) ? $this->model::all($order) : $this->model::all();
+        }
+
+        /**
+         *
+         */
+        public function one($id = null) {
+            return ($id) ? $this->model::one($id) : $this->model::one();
         }
 
         /**
