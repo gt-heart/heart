@@ -10,7 +10,7 @@
 
     namespace Controller;
 
-    class Base {
+    abstract class Base {
 
         /**
          * Stores the address to redirect user after action
@@ -73,7 +73,8 @@
          *
          */
         public function one($id = null) {
-            return ($id) ? $this->model::one($id) : $this->model::one();
+            $id = isset($_GET['id']) ? $_GET['id'] : null;
+            return ($id) ? $this->model::one($id) : null;
         }
 
         /**
@@ -137,10 +138,11 @@
          */
         public function login() {
             if (isset($_POST)) {
-                var_dump($_POST); die();
                 $obj = new $this->model($_REQUEST);
                 $got = $obj->login();
                 if ($got) {
+                    session_start();
+
                     $_SESSION['id'] = $got->id;
                     $_SESSION['name'] = $got->name;
                     $_SESSION['level'] = $got->level;
@@ -160,6 +162,7 @@
          */
         public function logout() {
             session_start();
+            var_dump($_SESSION);
             session_destroy();
             header('Location:'.$this->location);
         }
@@ -191,32 +194,27 @@
          *
          * @return void
          */
-        public static function action() {
-            $postActions = ['login', 'store'];
-            $getActions = ['delete', 'logout'];
+        public function action() {
+            session_start();
 
+            if (empty($_SESSION['on'])) $this->actions = ['login', 'logout'];
+
+            if (key($_GET) !== null && in_array(key($_GET), $this->actions)) $_REQUEST['action'] = (key($_GET));
+
+            if (isset($_REQUEST['action']) && in_array($_REQUEST['action'], $this->actions)) {
+                $action = $_REQUEST['action'];
+                if (in_array($action, $this->actions)) $this->$action();
+            }
+        }
+
+        /**
+         * Starts a class
+         */
+        public static function init() {
             $controller = get_called_class();
-            $call = new $controller();
+            $obj = new $controller();
+            $obj->action();
 
-            if (empty($_SESSION['on'])) {
-                $postActions = ['login'];
-                $getActions = ['logout'];
-            }
-
-            if (isset($_REQUEST['action']) && in_array($_REQUEST['action'], $call->actions)) {
-
-                if (
-                    $_SERVER['REQUEST_METHOD'] == 'POST' &&
-                    in_array($_REQUEST['action'], $postActions) ||
-                    $_SERVER['REQUEST_METHOD'] == 'GET' &&
-                    in_array($_REQUEST['action'], $getActions)
-                ) {
-                    $call->$_REQUEST['action']();
-                }
-
-            } elseif((key($_GET))!==null && in_array(key($_GET), $getActions) && in_array(key($_GET), $call->actions)) {
-                $action = key($_GET);
-                $call->$action();
-            }
+            return $obj;
         }
     }

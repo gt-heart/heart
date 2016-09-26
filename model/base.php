@@ -83,8 +83,8 @@
          */
         public function login() {
             $connect = self::connect();
-            $stm = $connect->prepare('SELECT * FROM `'.self::entity(false).'` WHERE login = :login AND password = :password LIMIT 1');
-            $stm->BindValue(':login',$this->login, PDO::PARAM_STR);
+            $stm = $connect->prepare('SELECT * FROM `'.self::entity(false).'` WHERE email = :email AND password = :password LIMIT 1');
+            $stm->BindValue(':email',$this->email, PDO::PARAM_STR);
             $stm->BindValue(':password',$this->password, PDO::PARAM_STR);
             $stm->execute();
             return $stm->fetch(PDO::FETCH_OBJ);
@@ -109,9 +109,8 @@
          * @param  integer $id [primary key]
          * @return object
          */
-        public static function one($id = null) {
+        public static function one($id) {
             $connect = self::connect();
-            isset($_GET['id']) ? $id = $_GET['id'] : true;
             $stm = $connect->prepare('SELECT * FROM `'.self::entity().'` WHERE id = '.$id.' LIMIT 1');
             $stm->bindParam(":id", $id, PDO::PARAM_INT);
             $stm->execute();
