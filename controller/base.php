@@ -49,6 +49,7 @@
          */
         function __construct() {
             $this->model = self::get_model(get_called_class());
+            self::action();
         }
 
         /**
@@ -148,7 +149,7 @@
                     $_SESSION['level'] = $got->level;
                     $_SESSION['on'] = true;
                     $got = null;
-                    header('Location: home');
+                    header('Location: ../views/home');
                 } else {
                     header('Location: ../views/index');
                 }
@@ -161,10 +162,9 @@
          * @return void
          */
         public function logout() {
-            session_start();
-            var_dump($_SESSION);
             session_destroy();
-            header('Location:'.$this->location);
+            header('Location: ../');
+            die();
         }
 
         /**
@@ -195,7 +195,7 @@
          * @return void
          */
         public function action() {
-            session_start();
+            (session_status() == PHP_SESSION_ACTIVE)?: session_start();
 
             if (empty($_SESSION['on'])) $this->actions = ['login', 'logout'];
 
@@ -205,16 +205,5 @@
                 $action = $_REQUEST['action'];
                 if (in_array($action, $this->actions)) $this->$action();
             }
-        }
-
-        /**
-         * Starts a class
-         */
-        public static function init() {
-            $controller = get_called_class();
-            $obj = new $controller();
-            $obj->action();
-
-            return $obj;
         }
     }
