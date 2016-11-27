@@ -36,7 +36,8 @@
          * @return boolean
          */
         public static function is_active($page) {
-            if (array_pop(explode('/', $_SERVER['REQUEST_URI'])) == $page) {
+            $uri = explode('/', $_SERVER['REQUEST_URI']);
+            if (array_pop($uri) == $page) {
                 echo ' class="active"';
             }
         }
