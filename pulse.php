@@ -1,15 +1,15 @@
 <?php
 
-
     (!Pulse::controller())?: require_once(Pulse::controller());
 
+    if (!empty($contexts))
+        foreach ($contexts as $context) (!Pulse::plus($context))?: require_once(Pulse::plus($context));
 
     $helpers = scandir(__DIR__.'/helpers');
 
 
     require_once (__DIR__.'/helpers/session.php');
-
-
+    require_once (__DIR__.'/helpers/print.php');
 
 
     class Pulse {
@@ -21,8 +21,12 @@
 
         public static function controller() {
             $self = new Pulse;
-            $controller = __DIR__ . '/../controllers/' . $self->clearFile() . '_controller.php';
-            return (!is_file($controller))? false : $controller;
+            $controller = self::getControllerPath($self->clearFile());
+            return (!is_file($controller))? NULL : $controller;
+        }
+
+        protected function getControllerPath($context) {
+            return __DIR__ . '/../controllers/' . $context . '_controller.php';
         }
 
         private function clearFile() {
@@ -31,9 +35,15 @@
             if ($file == $this->uri[1]) $file = array_pop($this->uri);
 
             $ctrl = str_replace('s.php', '', $file);
+            $ctrl = str_replace('.php', '', $ctrl);
             $ctrl = str_replace('edit-', '', $ctrl);
             $ctrl = str_replace('new-', '', $ctrl);
 
             return $ctrl;
+        }
+
+        public static function plus($context) {
+            $controller = self::getControllerPath($context);
+            return (!is_file($controller))? NULL : $controller;
         }
     }

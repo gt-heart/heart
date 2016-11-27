@@ -27,7 +27,7 @@
          * It can be overloaded by each controller
          *
          */
-        public $actions = ['delete', 'store'];
+        public $actions = ['delete', 'store', 'logout'];
 
         /**
          * Stores required fills to validate actions
@@ -36,6 +36,14 @@
          *
          */
         public $fillneeded = [];
+
+        /**
+         * Stores relationals entity name
+         *
+         * It can be overloaded by each controller
+         *
+         */
+        public $relationals = [];
 
         /**
          * Stores the Model class name
@@ -66,8 +74,8 @@
         /**
          *
          */
-        public function loadAll($order = null) {
-            return ($order) ? $this->model::all($order) : $this->model::all();
+        public function loadAll($order = null, $where = null) {
+            return ($order)? $this->model::all($order, $where) : $this->model::all();
         }
 
         /**
@@ -86,9 +94,15 @@
          * @return boolean
          */
         public function is_valid() {
-            foreach ($this->fillneeded as $key) {
+            foreach ($this->fillneeded as $key => $value) {
+
+                $_SESSION['msg'] = 'O campo "'.$value.'" é obrigatório.';
+
+                $key = (is_numeric($key))? $value: $key;
+
                 if (empty($_REQUEST[$key])) return false;
             }
+
             return true;
         }
 
@@ -101,16 +115,36 @@
             if (self::is_valid()) {
                 $obj = new $this->model($_REQUEST);
                 try {
-                    (is_null($obj->id)) ? $obj->insert() : $obj->update();
-
+                    $_REQUEST[self::getName4Relation()] = (is_null($obj->id)) ? $obj->insert() : $obj->update();
+                    if (class_exists('File')) new File();
                     $_SESSION['msg'] = 'success">Operação realizada com sucesso!';
-                } catch(pdoexception $e) {
-                    $_SESSION['msg'] = 'fail">Houve um erro. Por favor, confira as informações inseridas.';
+                    self::storeRelationalDatas();
+                } catch(\PDOException $e) {
+                    $_SESSION['msg'] = 'fail">Houve um erro. Por favor, confira as informações inseridas.'.$e;
                 }
             } else {
-                $_SESSION['msg'] = 'fail">Por favor, preencha os campos obrigatórios.';
+                $_SESSION['msg'] = 'fail">Por favor, preencha os campos obrigatórios. ' . $_SESSION['msg'];
             }
             header('Location:'.$this->location);
+        }
+
+        /**
+         *
+         */
+        public function getName4Relation() {
+            return lcfirst($this->model).'s_id';
+        }
+
+        /**
+         *
+         */
+        public function storeRelationalDatas() {
+            if (isset($_REQUEST['password'])) unset($_REQUEST['password']);
+
+            foreach ($this->relationals as $relation) {
+                $obj = new $relation($_REQUEST);
+                $obj->insert();
+            }
         }
 
         /**
@@ -125,7 +159,7 @@
                 try {
                     $_SESSION['msg'] = 'success">Operação realizada com sucesso!';
                     (!is_null($obj->id)) ? $obj->remove() : $_SESSION['msg'] = 'fail">Houve um erro. Por favor, tente novamente.';
-                } catch(pdoexception $e) {
+                } catch(\PDOException $e) {
                     $_SESSION['msg'] = 'fail">Houve um erro. Por favor, tente novamente.';
                 }
             }
@@ -143,7 +177,6 @@
                 $got = $obj->login();
                 if ($got) {
                     session_start();
-
                     $_SESSION['id'] = $got->id;
                     $_SESSION['name'] = $got->name;
                     $_SESSION['level'] = $got->level;
@@ -151,7 +184,7 @@
                     $got = null;
                     header('Location: ../views/home');
                 } else {
-                    header('Location: ../views/index');
+                    header('Location: ../');
                 }
             }
         }
@@ -164,7 +197,6 @@
         public function logout() {
             session_destroy();
             header('Location: ../');
-            die();
         }
 
         /**
@@ -198,9 +230,7 @@
             (session_status() == PHP_SESSION_ACTIVE)?: session_start();
 
             if (empty($_SESSION['on'])) $this->actions = ['login', 'logout'];
-
             if (key($_GET) !== null && in_array(key($_GET), $this->actions)) $_REQUEST['action'] = (key($_GET));
-
             if (isset($_REQUEST['action']) && in_array($_REQUEST['action'], $this->actions)) {
                 $action = $_REQUEST['action'];
                 if (in_array($action, $this->actions)) $this->$action();

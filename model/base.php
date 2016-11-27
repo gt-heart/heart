@@ -36,11 +36,21 @@
             isset($attributes['password']) ? static::encryptPass($attributes['password']) : true;
 
             foreach ($attributes as $key => $value) {
-                if(in_array($key, $this->fillable)) {
-                    $this->$key = $value;
+                if(in_array($key, $this->fillable) || array_key_exists($key, $this->fillable) && !empty($value)) {
+                    $this->$key = self::typeVerify($key, $value);
                 }
             }
             unset($this->fillable);
+        }
+
+        /**
+         * This function converts datas to MYSQL format data.
+         * Currently it only converts dates HAHAHAHAHA
+         */
+        protected function typeVerify($key, $value) {
+            $arr = (array_keys($this->fillable, 'date'));
+            $date = date_create_from_format('d/m/Y', $value);
+            return (in_array($key, $arr))? date($date->format('Y-m-d')): $value;
         }
 
         /**
@@ -96,9 +106,10 @@
          * @param  string $order [Sets the ORDER BY param and sorting to SQL query.]
          * @return object
          */
-        public static function all($order = 'id ASC') {
+        public static function all($order = 'id ASC', $where = null) {
             $connect = self::connect();
-            $stm = $connect->query('SELECT * FROM `'.self::entity().'` ORDER BY '.$order);
+            $where = (!$where)? null : ' WHERE '.$where;
+            $stm = $connect->query('SELECT * FROM `'.self::entity().'`'.$where.' ORDER BY '.$order);
             $stm->execute();
             return $stm->fetchAll(PDO::FETCH_OBJ);
         }
@@ -126,7 +137,8 @@
             $connect = self::connect();
             $attr = (array)$this;
             $stm = $connect->prepare('INSERT INTO `'.self::entity(false).'`('.implode(',  ', array_keys($attr)).', createdAt, updatedAt) VALUES (:'.implode(', :', array_keys($attr)).', NOW(), NOW())');
-            return $stm->execute($attr);
+            $stm->execute($attr);
+            return $connect->lastInsertId();
         }
 
         /**
