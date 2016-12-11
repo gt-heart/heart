@@ -30,6 +30,11 @@
         public $actions = ['delete', 'store', 'logout'];
 
         /**
+         *
+         */
+        public $offlineActions = [];
+
+        /**
          * Stores required fills to validate actions
          *
          * It can be overloaded by each controller
@@ -120,7 +125,7 @@
                     $_SESSION['msg'] = 'success">Operação realizada com sucesso!';
                     self::storeRelationalDatas();
                 } catch(\PDOException $e) {
-                    $_SESSION['msg'] = 'fail">Houve um erro. Por favor, confira as informações inseridas.'.$e;
+                    $_SESSION['msg'] = 'fail">Houve um erro. Por favor, confira as informações inseridas.';
                 }
             } else {
                 $_SESSION['msg'] = 'fail">Por favor, preencha os campos obrigatórios. ' . $_SESSION['msg'];
@@ -228,9 +233,12 @@
          */
         public function action() {
             (session_status() == PHP_SESSION_ACTIVE)?: session_start();
-
             if (empty($_SESSION['on'])) $this->actions = ['login', 'logout'];
+
+            $this->actions = array_merge($this->actions, $this->offlineActions);
+
             if (key($_GET) !== null && in_array(key($_GET), $this->actions)) $_REQUEST['action'] = (key($_GET));
+
             if (isset($_REQUEST['action']) && in_array($_REQUEST['action'], $this->actions)) {
                 $action = $_REQUEST['action'];
                 if (in_array($action, $this->actions)) $this->$action();
