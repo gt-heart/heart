@@ -2,10 +2,9 @@
 
 * Via git:
     - De preferência, acesse a raiz do seu projeto;
-    ```
     - Faça o download:
     ```
-    $ git submodule add https://github.com/GainTime/heart.git
+        $ git submodule add https://github.com/GainTime/heart.git
     ```
     - Pronto :smile:
 
