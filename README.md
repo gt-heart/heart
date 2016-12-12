@@ -1,4 +1,13 @@
-[WIKI com mais detalhes](https://github.com/GainTime/heart/wiki)
+### Instalação
+
+* Via git:
+    - De preferência, acesse a raiz do seu projeto;
+    ```
+    - Faça o download:
+    ```
+    $ git submodule add https://github.com/GainTime/heart.git
+    ```
+    - Pronto :smile:
 
 ### Estrutura
 ```.
@@ -14,6 +23,8 @@
 ```
 
 ## Uso
+[WIKI com mais detalhes](https://github.com/GainTime/heart/wiki)
+
 Em cada view (página) do seu projeto inclua uma chamada para  `heart/pulse`.
 ```php
 <?php require_once('heart/pulse.php'); ?>
