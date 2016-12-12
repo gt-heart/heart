@@ -1,3 +1,5 @@
+[WIKI com mais detalhes](https://github.com/GainTime/heart/wiki)
+
 ### Estrutura
 ```.
 ├── controller
