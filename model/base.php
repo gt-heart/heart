@@ -8,7 +8,10 @@
 
     namespace Model;
 
+    require_once(__DIR__.'/../lAtrium.php');
+
     use \PDO;
+    use \Heart\lAtrium as lAtrium;
 
     abstract class Base {
 
@@ -35,6 +38,11 @@
 
             isset($attributes['password']) ? static::encryptPass($attributes['password']) : true;
 
+            self::purifyAttributes($attributes);
+
+        }
+
+        private function purifyAttributes($attributes) {
             foreach ($attributes as $key => $value) {
                 if(in_array($key, $this->fillable) || array_key_exists($key, $this->fillable) && !empty($value)) {
                     $this->$key = self::typeVerify($key, $value);
@@ -59,9 +67,16 @@
          * @return object \PDO
          */
         protected static function connect() {
-            $pdo = new \PDO('mysql:host=localhost;dbname=default', 'root', '');
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $pdo;
+            $blood = lAtrium::getArterialBlood();
+            try {
+                $pdo = new \PDO('mysql:host='.$blood['host'].';dbname='.$blood["database"], $blood['user'], $blood['password']);
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                return $pdo;
+            } catch (\PDOException $e) {
+                //It's need a pretty error page
+                echo 'Há algo estranho ocorrendo... Melhor correr!';
+                die();
+            }
         }
 
         /**
@@ -82,7 +97,9 @@
          * @return string
          */
         protected static function entity($isView = true) {
-            $isView ? $suffix = self::DB_VIEW : $suffix = NULL;
+            $blood = lAtrium::getArterialBlood();
+
+            ($isView && $blood['useDbViews']) ? $suffix = self::DB_VIEW : $suffix = NULL;
             return lcfirst(get_called_class()).'s'.$suffix;
         }
 
