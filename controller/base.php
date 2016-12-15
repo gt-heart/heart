@@ -87,7 +87,7 @@
          *
          */
         public function one($id = null) {
-            $id = isset($_GET['id']) ? $_GET['id'] : null;
+            $id = isset($_GET['id']) ? $_GET['id'] : $id;
             return ($id) ? $this->model::one($id) : null;
         }
 
