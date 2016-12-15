@@ -37,9 +37,10 @@
          */
         public static function is_active($page) {
             $uri = explode('/', $_SERVER['REQUEST_URI']);
-            if (array_pop($uri) == $page) {
-                echo ' class="active"';
-            }
+            $active = str_replace('.php', '', array_pop($uri));
+            $active = explode('?', $active);
+            $active = $active[0];
+            if ($active == $page) echo ' class="active"';
         }
     }
 
