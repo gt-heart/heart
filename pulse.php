@@ -1,9 +1,9 @@
 <?php
 
-    (!Pulse::controller())?: require_once(Pulse::controller());
-
     if (!empty($contexts))
         foreach ($contexts as $context) (!Pulse::plus($context))?: require_once(Pulse::plus($context));
+
+    (!Pulse::controller())?: require_once(Pulse::controller());
 
     $helpers = scandir(__DIR__.'/helpers');
 
