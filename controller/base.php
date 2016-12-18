@@ -116,7 +116,7 @@
          *
          * @return void
          */
-        public function store() {
+        public function store($principal = true) {
             if (self::is_valid()) {
                 $obj = new $this->model($_REQUEST);
                 try {
@@ -130,6 +130,7 @@
             } else {
                 $_SESSION['msg'] = 'fail">Por favor, preencha os campos obrigatórios. ' . $_SESSION['msg'];
             }
+            if(!$principal) return $_REQUEST[self::getName4Relation()];
             header('Location:'.$this->location);
         }
 
