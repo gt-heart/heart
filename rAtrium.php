@@ -11,6 +11,9 @@
             'user',
             'password',
             'useDbViews',
+            'errorPage',
+            'rootPage',
+            'isDebug',
             'uploads',
             'uploadPath',
             'uploadsOn'
