@@ -11,7 +11,7 @@
          *
          * @return void
          */
-        public function is_up() {
+        public static function is_up() {
             if (!isset($_SESSION['on'])) {
                 self::logout();
             }

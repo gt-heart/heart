@@ -1,5 +1,7 @@
 <?php
 
+    require_once (__DIR__.'/sos/drugstore.php');
+
     if (!empty($contexts))
         foreach ($contexts as $context) (!Pulse::plus($context))?: require_once(Pulse::plus($context));
 
@@ -25,7 +27,7 @@
             return (!is_file($controller))? NULL : $controller;
         }
 
-        protected function getControllerPath($context) {
+        protected static function getControllerPath($context) {
             return __DIR__ . '/../controllers/' . $context . '_controller.php';
         }
 
