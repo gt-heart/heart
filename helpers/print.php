@@ -6,8 +6,14 @@
          */
         public static function it($obj, $property, $type ='', $default = '') {
             if (is_array($obj)) (object)$obj;
-            self::switchType($type, $obj, $property);
-            echo (!empty($obj->$property))? $obj->$property: $default;
+            if (!empty($obj->$property)) {
+                $backup = $obj->$property;
+                self::switchType($type, $obj, $property);
+                echo $obj->$property;
+                $obj->$property = $backup;
+            } else {
+                echo $default;
+            }
         }
 
         /**
@@ -19,6 +25,14 @@
                 $func = 'a'.ucfirst($exp[0]);
                 $obj->$property = self::$func($obj->$property, $exp[1]);
             }
+        }
+
+        /**
+         *
+         */
+        private static function aGet($value, $property) {
+            $property = strtolower($property);
+            return (!empty($value))? "?{$property}={$value}": '';
         }
 
         /**
