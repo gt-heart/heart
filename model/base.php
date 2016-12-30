@@ -167,6 +167,7 @@
         public function update() {
             $connect = self::connect();
             $attr = (array)$this;
+            $sets = '';
             foreach ($attr as $key => $value) {
                 $sets .= $key . ' = :' . $key . ', ';
             }
