@@ -182,7 +182,7 @@
                 $obj = new $this->model($_REQUEST);
                 $got = $obj->login();
                 if ($got) {
-                    session_start();
+                    (session_status() == PHP_SESSION_ACTIVE)?: session_start();
                     $_SESSION['id'] = $got->id;
                     $_SESSION['name'] = $got->name;
                     $_SESSION['level'] = $got->level;
