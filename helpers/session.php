@@ -13,7 +13,8 @@
          */
         public static function is_up() {
             if (!isset($_SESSION['on'])) {
-                self::logout();
+                $session = new Session();
+                $session->logout();
             }
         }
 
@@ -35,12 +36,19 @@
          *
          * @return boolean
          */
-        public static function is_active($page) {
+        public static function is_active($pages) {
             $uri = explode('/', $_SERVER['REQUEST_URI']);
             $active = str_replace('.php', '', array_pop($uri));
             $active = explode('?', $active);
             $active = $active[0];
-            if ($active == $page) echo ' class="active"';
+            
+            if (is_array($pages)) {
+                foreach ($pages as $page) {
+                    if ($active == $page) echo ' class="active"';
+                }
+            } else {
+                if ($active == $pages) echo ' class="active"';
+            }
         }
     }
 
