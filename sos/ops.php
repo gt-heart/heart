@@ -1,3 +1,4 @@
+<?php require_once(__DIR__.'/../pulse.php'); ?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,5 +9,9 @@
     <h1>
       The heart is not working right. :/
     </h1>
+    <section>
+      <?php Session::msg(); ?>
+      <?php Session::errorPrint(); ?>
+    </section>
   </body>
 </html>

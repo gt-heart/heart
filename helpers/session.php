@@ -30,6 +30,16 @@
         }
 
         /**
+         * Prints the current error message
+         * @return void
+         */
+        public static function errorPrint() {
+            (isset($_SESSION['error']))? $error = $_SESSION['error']:  $error = $_SESSION['error'] = null;
+            unset($_SESSION['error']);
+            echo $error;
+        }
+
+        /**
          * Verify location to active link on menu
          *
          * @param  string  $page
@@ -41,7 +51,7 @@
             $active = str_replace('.php', '', array_pop($uri));
             $active = explode('?', $active);
             $active = $active[0];
-            
+
             if (is_array($pages)) {
                 foreach ($pages as $page) {
                     if ($active == $page) echo ' class="active"';
