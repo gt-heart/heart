@@ -92,6 +92,13 @@
         }
 
         /**
+         *
+         */
+        public function selectIt($clauses = [], $order = null, $limit = null) {
+            return (!empty($clauses))? $this->model::selectIt($clauses, $order, $limit): null;
+        }
+
+        /**
          * Verifies if passed informations are sufficient to validate the query
          *
          * It'll be overloaded by each controller
