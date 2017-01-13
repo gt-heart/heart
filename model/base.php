@@ -140,10 +140,30 @@
          */
         public static function one($id) {
             $connect = self::connect();
-            $stm = $connect->prepare('SELECT * FROM `'.self::entity().'` WHERE id = '.$id.' LIMIT 1');
-            $stm->bindParam(":id", $id, PDO::PARAM_INT);
+            $stm = $connect->prepare('SELECT * FROM `'.self::entity().'` WHERE id = :id LIMIT 1');
+            $stm->bindValue(":id", $id, PDO::PARAM_INT);
             $stm->execute();
             return $stm->fetch(PDO::FETCH_OBJ);
+        }
+
+        /**
+         *
+         */
+        public static function selectIt($clauses = [], $order = null, $limit = null) {
+            $where = null;
+
+            foreach ($clauses as $key => $value) {
+                $where .= (!empty($where))? ' AND ' . $key . ' = :' . $key: $key . ' = :' . $key;
+            }
+
+            (empty($order))?: $order = ' ORDER BY ' . $order;
+            (empty($limit))?: $limit = ' LIMIT ' . $limit;
+
+            $connect = self::connect();
+            echo('SELECT * FROM `'.self::entity().'` WHERE ' . $where . $order . $limit);
+            $stm = $connect->prepare('SELECT * FROM `'.self::entity().'` WHERE ' . $where . $order . $limit );
+            $stm->execute($clauses);
+            return $stm->fetchAll(PDO::FETCH_OBJ);
         }
 
         /**
