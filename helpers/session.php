@@ -54,7 +54,10 @@
 
             if (is_array($pages)) {
                 foreach ($pages as $page) {
-                    if ($active == $page) echo ' class="active"';
+                    if ($active == $page) {
+                        echo ' class="active"';
+                        break;
+                    }
                 }
             } else {
                 if ($active == $pages) echo ' class="active"';
