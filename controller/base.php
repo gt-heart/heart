@@ -128,9 +128,9 @@
                 $obj = new $this->model($_REQUEST);
                 try {
                     $_REQUEST[self::getName4Relation()] = (is_null($obj->id)) ? $obj->insert() : $obj->update();
-                    if (class_exists('File')) new File();
+
                     $_SESSION['msg'] = 'success">Operação realizada com sucesso!';
-                    self::storeRelationalDatas();
+                    if (is_null($obj->id)) self::storeRelationalDatas();
                 } catch(\PDOException $e) {
                     $_SESSION['msg'] = 'fail">Houve um erro. Por favor, confira as informações inseridas.';
                 }
