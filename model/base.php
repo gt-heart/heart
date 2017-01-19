@@ -33,7 +33,7 @@
          * Generic dynamic construct for models
          * @param array $attributes [field list for search on database table/view]
          */
-        function __construct($attributes) {
+        function __construct($attributes = []) {
 
             $this->id = isset($attributes['id']) ? $attributes['id'] : null;
 
@@ -43,7 +43,7 @@
 
         }
 
-        private function purifyAttributes($attributes) {
+        private function purifyAttributes($attributes = []) {
             foreach ($attributes as $key => $value) {
                 if(in_array($key, $this->fillable) || array_key_exists($key, $this->fillable) && !empty($value)) {
                     $this->$key = self::typeVerify($key, $value);
@@ -153,14 +153,17 @@
             $where = null;
 
             foreach ($clauses as $key => $value) {
-                $where .= (!empty($where))? ' AND ' . $key . ' = :' . $key: $key . ' = :' . $key;
+                if (!empty($value))
+                    $where .= (!empty($where))? ' AND ' . $key . ' = :' . $key: $key . ' = :' . $key;
+                else
+                    $where .= (!empty($where))? ' AND ' . $key . ' IS NULL' : $key . ' IS NULL';
+
             }
 
             (empty($order))?: $order = ' ORDER BY ' . $order;
             (empty($limit))?: $limit = ' LIMIT ' . $limit;
 
             $connect = self::connect();
-            echo('SELECT * FROM `'.self::entity().'` WHERE ' . $where . $order . $limit);
             $stm = $connect->prepare('SELECT * FROM `'.self::entity().'` WHERE ' . $where . $order . $limit );
             $stm->execute($clauses);
             return $stm->fetchAll(PDO::FETCH_OBJ);
