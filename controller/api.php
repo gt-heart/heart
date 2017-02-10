@@ -193,6 +193,7 @@
                     $_SESSION['on'] = true;
                     return $got;
                 } else {
+                    http_response_code(400);
                     return array('message' => 'error' );;
                 }
             }
