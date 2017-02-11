@@ -165,14 +165,21 @@
          *
          * @return void
          */
-        public function delete() {
-            if ($_REQUEST['delete']) {
+        public function delete($clauses = []) {
+            if (!empty($_REQUEST['delete'])) {
                 $_REQUEST['id'] = $_REQUEST['delete'];
                 $obj = new $this->model($_REQUEST);
                 try {
-                    return (!is_null($obj->id)) ? $obj->remove() : $_SESSION['msg'] = 'fail">Houve um erro. Por favor, tente novamente.';
+                    return (!is_null($obj->id)) ? $obj->remove() : 'fail">Houve um erro. Por favor, tente novamente.';
                 } catch(\PDOException $e) {
-                    return $_SESSION['msg'] = 'Houve um erro. Por favor, tente novamente.';
+                    return 'Houve um erro. Por favor, tente novamente.';
+                }
+            } elseif (!empty($clauses)) {
+                $obj = new $this->model($_REQUEST);
+                try {
+                    $obj->remove($clauses);
+                } catch(\PDOException $e) {
+                    return 'Houve um erro. Por favor, tente novamente.';
                 }
             }
         }
@@ -193,7 +200,7 @@
                     $_SESSION['on'] = true;
                     return $got;
                 } else {
-                    http_response_code(400);
+                    http_response_code(401);
                     return array('message' => 'error' );;
                 }
             }

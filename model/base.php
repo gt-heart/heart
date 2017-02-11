@@ -203,10 +203,22 @@
          *
          * @return boolean [TRUE on success or FALSE on failure.]
          */
-        public function remove() {
+        public function remove($clauses = []) {
+            $where = null;
+
+            foreach ($clauses as $key => $value) {
+                if (!empty($value))
+                    $where .= (!empty($where))? ' AND ' . $key . ' = :' . $key: $key . ' = :' . $key;
+                else
+                    $where .= (!empty($where))? ' AND ' . $key . ' IS NULL' : $key . ' IS NULL';
+
+            }
+
+            if (empty($where)) $where = 'id = ' . $this->id;
+
             $connect = self::connect();
-            $stm = $connect->prepare('DELETE FROM `'.self::entity(false).'` WHERE id = '.$this->id);
-            return $stm->execute();
+            $stm = $connect->prepare('DELETE FROM `'.self::entity(false).'` WHERE ' . $where );
+            return $stm->execute($clauses);
         }
 
         /**
