@@ -36,10 +36,9 @@
         function __construct($attributes = []) {
 
             $this->id = isset($attributes['id']) ? $attributes['id'] : null;
-
             isset($attributes['password']) ? static::encryptPass($attributes['password']) : true;
 
-            self::purifyAttributes($attributes);
+            if (!empty($attributes)) self::purifyAttributes($attributes);
 
         }
 
@@ -192,7 +191,7 @@
             $attr = (array)$this;
             $sets = '';
             foreach ($attr as $key => $value) {
-                $sets .= $key . ' = :' . $key . ', ';
+                if (!empty($key)) $sets .= $key . ' = :' . $key . ', ';
             }
             $stm = $connect->prepare('UPDATE `'.self::entity(false).'` SET '.$sets.' updatedAt = NOW() WHERE id = '.$this->id);
             return $stm->execute($attr);

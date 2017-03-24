@@ -11,10 +11,12 @@
     namespace Controller;
 
     require_once(__DIR__.'/../lAtrium.php');
+    require_once(__DIR__.'/../http/response.php');
 
     use \Heart\lAtrium as lAtrium;
 
     abstract class Api {
+        use \Http\Response;
 
         /**
          * Stores valid actions to use on system
@@ -58,7 +60,6 @@
          * Generic construct for controllers
          */
         function __construct() {
-
             $this->blood = lAtrium::getArterialBlood();
             $this->model = self::get_model(get_called_class());
             self::action();
@@ -89,14 +90,15 @@
             $id = isset($_GET['id']) ? $_GET['id'] : $id;
             $result = ($id) ? $this->model::one($id) : null;
             unset($result->password);
-            return $result;
+
+            return (!empty($result))? $result: self::code(404);
         }
 
         /**
          *
          */
         public function selectIt($clauses = [], $order = null, $limit = null) {
-            return (!empty($clauses))? $this->model::selectIt($clauses, $order, $limit): null;
+            return (!empty($clauses))? $this->model::selectIt($clauses, $order, $limit):  self::code(400);
         }
 
         /**
@@ -136,7 +138,7 @@
                 }
                 return $result;
             } else {
-                http_response_code(400);
+                http_response_code(200);
                 return $_SESSION['msg'];
             }
         }
@@ -190,9 +192,10 @@
          * @return void
          */
         public function login() {
-            if (isset($_POST)) {
+            if (isset($_REQUEST)) {
                 $obj = new $this->model($_REQUEST);
                 $got = $obj->login();
+
                 if ($got) {
                     (session_status() == PHP_SESSION_ACTIVE)?: session_start();
                     $got = self::one($got->id);
@@ -200,8 +203,7 @@
                     $_SESSION['on'] = true;
                     return $got;
                 } else {
-                    http_response_code(401);
-                    return array('message' => 'error' );;
+                    return self::code(401);
                 }
             }
         }
