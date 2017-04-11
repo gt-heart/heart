@@ -78,6 +78,7 @@ abstract class API {
 
     public function pulseIt() {
         $call = self::call();
+        header('Content-Type: application/json');
         print_r($call);
     }
 
