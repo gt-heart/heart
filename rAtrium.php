@@ -13,6 +13,7 @@
             'useDbViews',
             'errorPage',
             'rootPage',
+            'homePage',
             'isDebug',
             'uploads',
             'uploadPath',
