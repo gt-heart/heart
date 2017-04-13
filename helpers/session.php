@@ -16,6 +16,7 @@
                 $session = new Session();
                 $session->logout();
             }
+            return new Session();
         }
 
         /**
