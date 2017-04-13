@@ -214,8 +214,9 @@
          * @return void
          */
         public function logout() {
+            $blood = lAtrium::getArterialBlood();
             session_destroy();
-            header('Location: ../');
+            header('Location: ' . $blood['rootPage']);
         }
 
         /**
@@ -226,7 +227,8 @@
          * @return mixed
          */
         public static function pagePermission($key = null) {
-            (self::permission($key)) ? true : header('Location: home');
+            $blood = lAtrium::getArterialBlood();
+            (self::permission($key)) ? true : header('Location: ' . $blood['homePage']);
         }
 
         /**
