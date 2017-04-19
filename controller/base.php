@@ -65,7 +65,7 @@
          * Generic construct for controllers
          */
         function __construct() {
-            $this->model = self::get_model(get_called_class());
+            $this->model = self::get_model();
             self::action();
         }
 
@@ -76,8 +76,8 @@
          *
          * @return string
          */
-        public static function get_model($controller) {
-            return str_replace('_controller', '', $controller);
+        public static function get_model() {
+            return str_replace('_controller', '', get_called_class());
         }
 
         /**
@@ -127,41 +127,19 @@
          *
          * @return void
          */
-        public function store($principal = true) {
+        public function store() {
             if (self::is_valid()) {
                 $obj = new $this->model($_REQUEST);
                 try {
-                    $_REQUEST[self::getName4Relation()] = (is_null($obj->id)) ? $obj->insert() : $obj->update();
-
+                    $result = (is_null($obj->id)) ? $obj->insert() : $obj->update();
                     $_SESSION['msg'] = 'success">Operação realizada com sucesso!';
-                    if (is_null($obj->id)) self::storeRelationalDatas();
                 } catch(\PDOException $e) {
                     $_SESSION['msg'] = 'fail">Houve um erro. Por favor, confira as informações inseridas.';
                 }
             } else {
                 $_SESSION['msg'] = 'fail">Por favor, preencha os campos obrigatórios. ' . $_SESSION['msg'];
             }
-            if(!$principal) return $_REQUEST[self::getName4Relation()];
             header('Location:'.$this->location);
-        }
-
-        /**
-         *
-         */
-        public function getName4Relation() {
-            return lcfirst($this->model).'s_id';
-        }
-
-        /**
-         *
-         */
-        public function storeRelationalDatas() {
-            if (isset($_REQUEST['password'])) unset($_REQUEST['password']);
-
-            foreach ($this->relationals as $relation) {
-                $obj = new $relation($_REQUEST);
-                $obj->insert();
-            }
         }
 
         /**
