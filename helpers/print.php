@@ -35,12 +35,12 @@
          * @param  string $default      The default value to be print case $obj->$property is null
          * @return void
          */
-        public static function it($obj, $property, $type ='', $default = '') {
+        public static function it($obj, $property, $type ='', $default = '', $removes = '') {
             if (is_array($obj)) (object)$obj;
             if (!empty($obj->$property)) {
                 $backup = $obj->$property;
                 self::switchType($type, $obj, $property);
-                echo $obj->$property;
+                echo str_replace($removes, '', $obj->$property);
                 $obj->$property = $backup;
             } else {
                 echo $default;
