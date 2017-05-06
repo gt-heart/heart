@@ -203,9 +203,14 @@
          *
          * @return boolean [TRUE on success or FALSE on failure.]
          */
-        public function remove() {
+        public function remove($where = null) {
+            if (empty($where)) {
+                $where = "id = {$this->id}";
+            }
+            $where = ($where == "*")? "": '` WHERE ' . $where;
+
             $connect = self::connect();
-            $stm = $connect->prepare('DELETE FROM `'.self::entity(false).'` WHERE id = '.$this->id);
+            $stm = $connect->prepare('DELETE FROM `'.self::entity(false).$where);
             return $stm->execute();
         }
 
