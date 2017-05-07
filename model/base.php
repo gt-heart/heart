@@ -37,7 +37,7 @@
 
             $this->id = isset($attributes['id']) ? $attributes['id'] : null;
 
-            isset($attributes['password']) ? static::encryptPass($attributes['password']) : true;
+            !empty($attributes['password']) ? static::encryptPass($attributes['password']) : true;
 
             self::purifyAttributes($attributes);
 
