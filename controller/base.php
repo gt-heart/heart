@@ -193,6 +193,7 @@
          */
         public function logout() {
             $blood = lAtrium::getArterialBlood();
+            (session_status() == PHP_SESSION_ACTIVE)?: session_start();
             session_destroy();
             header('Location: ' . $blood['rootPage']);
         }
