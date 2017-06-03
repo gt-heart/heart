@@ -14,6 +14,7 @@
             'errorPage',
             'rootPage',
             'homePage',
+            'escapePage',
             'isDebug',
             'uploads',
             'uploadPath',

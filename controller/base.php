@@ -191,11 +191,12 @@
          *
          * @return void
          */
-        public function logout() {
+        public function logout($location = null) {
             $blood = lAtrium::getArterialBlood();
+            $location = empty($location) ? $blood['rootPage'] : $blood['escapePage'];
             (session_status() == PHP_SESSION_ACTIVE)?: session_start();
             session_destroy();
-            header('Location: ' . $blood['rootPage']);
+            header('Location: ' . $location);
         }
 
         /**

@@ -14,7 +14,7 @@
         public static function is_up() {
             if (!isset($_SESSION['on'])) {
                 $session = new Session();
-                $session->logout();
+                $session->logout('is_up');
             }
             return new Session();
         }
