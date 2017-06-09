@@ -28,7 +28,19 @@
          * @var array
          */
         protected $fillable = [];
-
+        protected $relationship = [];
+        /**
+         * Create dynamic objects attributes when it's called.
+         * This's works only with simple call between objects.
+        */
+        function __get($key) {
+            if(in_array($key, $this->relationship) || array_key_exists($key, $this->relationship) ) {
+                $value = $key . "_id";
+                return ucfirst($key)::one($this->$value);
+            } else {
+                return $this->$key;
+            }
+        }
         /**
          * Generic dynamic construct for models
          * @param array $attributes [field list for search on database table/view]
