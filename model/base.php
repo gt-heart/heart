@@ -8,6 +8,19 @@
 
     namespace Model;
 
+    //This Function believe that you're using the default tree files for yours projects. It'll find Classes that the Heart can't see.
+    //While the Framework doesn't set a default to Tree Files, the function accept two ways to find mysterious classes.
+    spl_autoload_register( function($className) { 
+        $className = strtolower($className);
+        if ( file_exists( __DIR__ . '/../../models/' .$className . '.php')) { 
+            require_once __DIR__ . '/../../models/' . $className . '.php';
+            return true; 
+        } else if ( file_exists( __DIR__ . '/../../model/' .$className . '.php')) { 
+            require_once __DIR__ . '/../../model/' . $className . '.php';
+            return true;
+        }
+    });
+
     require_once(__DIR__.'/../lAtrium.php');
     require_once (__DIR__.'/../sos/drugstore.php');
 
@@ -24,7 +37,7 @@
         /**
          * Field list wich defines database fillables.
          * The attributes that are mass assignable.
-         *
+         * Relationship set the classes can call as attributes.
          * @var array
          */
         protected $fillable = [];
@@ -35,7 +48,7 @@
         */
         function __get($key) {
             if(in_array($key, $this->relationship) || array_key_exists($key, $this->relationship) ) {
-                $value = $key . "_id";
+                $value = $key . "s_id";
                 return ucfirst($key)::one($this->$value);
             } else {
                 return $this->$key;
@@ -54,7 +67,16 @@
             self::purifyAttributes($attributes);
 
         }
-
+        /**
+         * This function converts any object in array.
+         */
+        protected function objectRayX() {
+            $arr = clone $this;
+            unset($arr->relationship);
+            $arr = (array)$arr;
+            return $arr;
+        }
+        
         private function purifyAttributes($attributes = []) {
             foreach ($attributes as $key => $value) {
                 if(in_array($key, $this->fillable) || array_key_exists($key, $this->fillable) && !empty($value)) {
@@ -157,13 +179,11 @@
             $stm->execute();
             return $stm->fetch(PDO::FETCH_OBJ);
         }
-
         /**
          *
          */
         public static function selectIt($clauses = [], $order = null, $limit = null) {
             $where = null;
-
             foreach ($clauses as $key => $value) {
                 if (!empty($value))
                     $where .= (!empty($where))? ' AND ' . $key . ' = :' . $key: $key . ' = :' . $key;
@@ -188,7 +208,7 @@
          */
         public function insert() {
             $connect = self::connect();
-            $attr = (array)$this;
+            $attr = $this->objectRayX();
             $stm = $connect->prepare('INSERT INTO `'.self::entity(false).'`('.implode(',  ', array_keys($attr)).', createdAt, updatedAt) VALUES (:'.implode(', :', array_keys($attr)).', NOW(), NOW())');
             $stm->execute($attr);
             return $connect->lastInsertId();
@@ -201,8 +221,12 @@
          */
         public function update() {
             $connect = self::connect();
-            $attr = (array)$this;
+            $attr = $this->objectRayX();
             $sets = '';
+            //var_dump($this);die;
+            //var_dump($this->objectRayX());die;
+            //var_dump($this->team);die;
+            //var_dump($this->team->name);die;
             foreach ($attr as $key => $value) {
                 $sets .= $key . ' = :' . $key . ', ';
             }
