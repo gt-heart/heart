@@ -1,5 +1,6 @@
 <?php
     namespace SOS;
+
     require_once (__DIR__.'/../lAtrium.php');
     require_once (__DIR__.'/error.php');
 
@@ -30,4 +31,3 @@
     }
 
     new \SOS\Drugstore();
-?>

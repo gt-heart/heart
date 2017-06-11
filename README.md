@@ -62,7 +62,8 @@ Nas models, siga o padrão:
     require_once('../heart/model/base.php');
 
     class User extends \Model\Base {
-        public $fillable = ['picture', 'name', 'email', 'level'];
+        public $fillable = ['picture', 'name', 'email', 'level', 'jobs_id'];
+        public $relationship = ['job'];
     }
 
 ```
