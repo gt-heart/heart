@@ -8,25 +8,22 @@
 
     namespace Model;
 
-    //This Function believe that you're using the default tree files for yours projects. It'll find Classes that the Heart can't see.
-    //While the Framework doesn't set a default to Tree Files, the function accept two ways to find mysterious classes.
-    spl_autoload_register( function($className) { 
-        $className = strtolower($className);
-        if ( file_exists( __DIR__ . '/../../models/' .$className . '.php')) { 
-            require_once __DIR__ . '/../../models/' . $className . '.php';
-            return true; 
-        } else if ( file_exists( __DIR__ . '/../../model/' .$className . '.php')) { 
-            require_once __DIR__ . '/../../model/' . $className . '.php';
-            return true;
-        }
-    });
-
     require_once(__DIR__.'/../lAtrium.php');
     require_once (__DIR__.'/../sos/drugstore.php');
 
     use \PDO;
     use \Heart\lAtrium as lAtrium;
 
+    //This Function will find Classes that the Heart can't see in your project. The heart feels bad :(.
+    
+    spl_autoload_register( function($className) { 
+        $blood = lAtrium::getDieBlood();
+        if ( array_key_exists( $className, $blood) ) { 
+            require_once $blood[$className];
+            return true; 
+        }
+    });
+    
     abstract class Base {
 
         /**
@@ -65,7 +62,9 @@
             !empty($attributes['password']) ? static::encryptPass($attributes['password']) : true;
 
             self::purifyAttributes($attributes);
-
+            
+            $reflector = new \ReflectionClass(get_class($this));
+            lAtrium::cancerFill( get_class($this), $reflector->getFileName() );
         }
         /**
          * This function converts any object in array.
@@ -110,7 +109,6 @@
             } catch (\PDOException $e) {
                 //It's need a pretty error page
                 echo 'Há algo estranho ocorrendo... Melhor correr!';
-                die();
             }
         }
 
@@ -223,10 +221,6 @@
             $connect = self::connect();
             $attr = $this->objectRayX();
             $sets = '';
-            //var_dump($this);die;
-            //var_dump($this->objectRayX());die;
-            //var_dump($this->team);die;
-            //var_dump($this->team->name);die;
             foreach ($attr as $key => $value) {
                 $sets .= $key . ' = :' . $key . ', ';
             }
