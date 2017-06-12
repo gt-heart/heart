@@ -109,6 +109,7 @@
             } catch (\PDOException $e) {
                 //It's need a pretty error page
                 echo 'Há algo estranho ocorrendo... Melhor correr!';
+                die;
             }
         }
 
