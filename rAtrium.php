@@ -41,7 +41,7 @@
         }
 
         /**
-         * Hard? NO! If dieChange is true the function returns $fileCancer or $filePath. Obvious, file was handled. 
+         * Hard? NO! If dieChange is true the function returns $fileCancer else $filePath. Obvious, file was handled. 
         */
 
         private function purifyBlood( $dieChange ) {
