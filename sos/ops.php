@@ -1,4 +1,4 @@
-<?php require_once(__DIR__.'/../pulse.php'); ?>
+<?php require_once(__DIR__.'/../pulse.php');?>
 <!DOCTYPE html>
 <html>
   <head>

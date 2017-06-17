@@ -24,7 +24,8 @@
             'isDebug',
             'uploads',
             'uploadPath',
-            'uploadsOn'
+            'uploadsOn',
+            'autoLoad'
         ];
 
         public $arterialBlood = [];
@@ -37,7 +38,8 @@
 
         public function __construct() {
             $this->arterialBlood = self::purifyBlood(false);
-            $this->dieBlood = self::purifyBlood(true);
+            if ( $this->arterialBlood['autoLoad'] )
+                $this->dieBlood = self::purifyBlood(true);
         }
 
         /**

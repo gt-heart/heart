@@ -17,7 +17,8 @@
 
         public static function cancerFill( $class, $location ) {
             $rAtrium = new rAtrium();
-            $rAtrium->diagnoseCancer($class, $location);
+            if ( $rAtrium->arterialBlood['autoLoad'] )
+                $rAtrium->diagnoseCancer($class, $location);
         }
         
         /*

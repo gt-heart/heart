@@ -67,6 +67,9 @@
         function __construct() {
             $this->model = self::get_model();
             self::action();
+            
+            $reflector = new \ReflectionClass(get_class($this));
+            lAtrium::cancerFill( get_class($this), $reflector->getFileName() );
         }
 
         /**

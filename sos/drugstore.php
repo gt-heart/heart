@@ -3,7 +3,6 @@
 
     require_once (__DIR__.'/../lAtrium.php');
     require_once (__DIR__.'/error.php');
-
     class Drugstore {
       public function __construct() {
         register_shutdown_function(array($this, 'shutdown'));
@@ -24,7 +23,6 @@
 
         if (!empty($lastError)) {
             $_SESSION['msg'] = 'fail">OPA! Cuidado como brinca!';
-
             header('Location:'.$blood['errorPage']);
         }
       }

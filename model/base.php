@@ -13,16 +13,6 @@
 
     use \PDO;
     use \Heart\lAtrium as lAtrium;
-
-    //This Function will find Classes that the Heart can't see in your project. The heart feels bad :(.
-    
-    spl_autoload_register( function($className) { 
-        $blood = lAtrium::getDieBlood();
-        if ( array_key_exists( $className, $blood) ) { 
-            require_once $blood[$className];
-            return true; 
-        }
-    });
     
     abstract class Base {
 
