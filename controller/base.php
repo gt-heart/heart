@@ -31,7 +31,7 @@
          * It can be overloaded by each controller
          *
          */
-        public $actions = ['delete', 'store', 'logout'];
+        public $actions = ['delete', 'store', 'logout', 'storeExt'];
 
         /**
          *
@@ -144,7 +144,25 @@
             }
             header('Location:'.$this->location);
         }
-
+        /**
+         * Returns object's ID that modified. This function can use when other controllers modify external objects
+         *
+         * @return int
+         */
+        public function storeExt() {
+            if (self::is_valid()) {
+                $obj = new $this->model($_REQUEST);
+                try {
+                    $result = (is_null($obj->id)) ? $obj->insert() : $obj->update();
+                    $_SESSION['msg'] = 'success">Operação realizada com sucesso!';
+                } catch(\PDOException $e) {
+                    $_SESSION['msg'] = 'fail">Houve um erro. Por favor, confira as informações inseridas.';
+                }
+            } else {
+                $_SESSION['msg'] = 'fail">Por favor, preencha os campos obrigatórios. ' . $_SESSION['msg'];
+            }
+            return $result;
+        }
         /**
          * Controls what happens on system when an database line is deleted
          *
