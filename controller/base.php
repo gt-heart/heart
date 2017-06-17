@@ -10,7 +10,7 @@
 
     namespace Controller;
 
-    require_once(__DIR__.'/../lAtrium.php');
+    require_once ( __DIR__ . '/../remedyBlood.php');
 
     use \Heart\lAtrium as lAtrium;
 
