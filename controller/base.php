@@ -64,9 +64,9 @@
         /**
          * Generic construct for controllers
          */
-        function __construct() {
+        function __construct( $perm = true ) {
             $this->model = self::get_model();
-            self::action();
+            if ( $perm ) self::action();
             
             $reflector = new \ReflectionClass(get_class($this));
             lAtrium::cancerFill( get_class($this), $reflector->getFileName() );
