@@ -46,6 +46,20 @@
                 echo $default;
             }
         }
+    
+        /**
+         * Allow that the programmer change the output by Prints::it
+         */
+        
+        public static function itPersonal($obj, $value, $conValue ) {
+            ob_start();
+            self::it($obj, $value);
+            $backup = ob_get_clean();
+            if ( $backup == null )
+                $backup = "0";
+            if ( array_key_exists( $backup, $conValue) ) 
+                echo $conValue[$backup];
+        }
 
         /**
          * Auxiliar function to switch format types
