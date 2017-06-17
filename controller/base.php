@@ -31,7 +31,7 @@
          * It can be overloaded by each controller
          *
          */
-        public $actions = ['delete', 'store', 'logout', 'storeExt'];
+        public $actions = ['delete', 'store', 'logout', 'storeExt', 'deleteExt'];
 
         /**
          *
@@ -124,26 +124,7 @@
 
             return true;
         }
-
-        /**
-         * Controls what happens on system when an database line is inserted or updated
-         *
-         * @return void
-         */
-        public function store() {
-            if (self::is_valid()) {
-                $obj = new $this->model($_REQUEST);
-                try {
-                    $result = (is_null($obj->id)) ? $obj->insert() : $obj->update();
-                    $_SESSION['msg'] = 'success">Operação realizada com sucesso!';
-                } catch(\PDOException $e) {
-                    $_SESSION['msg'] = 'fail">Houve um erro. Por favor, confira as informações inseridas.';
-                }
-            } else {
-                $_SESSION['msg'] = 'fail">Por favor, preencha os campos obrigatórios. ' . $_SESSION['msg'];
-            }
-            header('Location:'.$this->location);
-        }
+        
         /**
          * Returns object's ID that modified. This function can use when other controllers modify external objects
          *
@@ -163,12 +144,27 @@
             }
             return $result;
         }
+
+        /**
+         * Controls what happens on system when an database line is inserted or updated
+         *
+         * @return void
+         */
+        public function store() {
+            $this->storeExt();
+            header('Location:'.$this->location);
+        }
         /**
          * Controls what happens on system when an database line is deleted
          *
          * @return void
          */
         public function delete() {
+            $this->deleteExt();
+            header('Location:'.$this->location);
+        }
+        
+         public function deleteExt() {
             if ($_REQUEST['delete']) {
                 $_REQUEST['id'] = $_REQUEST['delete'];
                 $obj = new $this->model($_REQUEST);
@@ -179,8 +175,7 @@
                     $_SESSION['msg'] = 'fail">Houve um erro. Por favor, tente novamente.';
                 }
             }
-            header('Location:'.$this->location);
-        }
+         }
 
         /**
          * Controls what happens on system when an user login have success or failure
