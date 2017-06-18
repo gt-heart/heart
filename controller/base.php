@@ -9,7 +9,7 @@
  */
 
     namespace Controller;
-
+    require_once ( __DIR__ . '/../lAtrium.php');
     require_once ( __DIR__ . '/../remedyBlood.php');
 
     use \Heart\lAtrium as lAtrium;
@@ -142,7 +142,7 @@
             } else {
                 $_SESSION['msg'] = 'fail">Por favor, preencha os campos obrigatórios. ' . $_SESSION['msg'];
             }
-            return $result;
+            if ( isset($result) ) return $result;
         }
 
         /**
