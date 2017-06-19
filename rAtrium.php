@@ -66,9 +66,16 @@
             return $arterial;
         }
 
+        
         private function cleaner($venous) {
             $venous = str_replace(' ', '', $venous);
             $venous = explode(':', $venous);
+            foreach ( $venous as $key => $value ) {
+                if ( $key > 1 ) { 
+                    $venous[1] .= ':'.$value;
+                    unset($venous[$key]);
+                }
+             }
             $value = explode('\'', $venous[1], 3);
             self::verifyBoolean($value[1]);
             $venous[1] = $value[1];
