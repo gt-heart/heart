@@ -253,6 +253,7 @@
 
             if (isset($_REQUEST['action']) && in_array($_REQUEST['action'], $this->actions)) {
                 $action = $_REQUEST['action'];
+                unset($_REQUEST['action']);
                 if (in_array($action, $this->actions)) $this->$action();
             }
         }
