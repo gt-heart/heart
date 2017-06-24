@@ -166,7 +166,7 @@
             $connect = self::connect();
             $stm = $connect->prepare('SELECT * FROM `'.self::entity().'` WHERE ' . $where . $order . $limit );
             $stm->execute($clauses);
-            return ($limit > 1)? $stm->fetchAll(PDO::FETCH_OBJ): $stm->fetch(PDO::FETCH_OBJ);
+            return ($limit !== 1)? $stm->fetchAll(PDO::FETCH_OBJ): $stm->fetch(PDO::FETCH_OBJ);
         }
 
         /**
