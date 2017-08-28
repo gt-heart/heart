@@ -1,6 +1,8 @@
 <?php
     namespace SOS;
 
+    require_once (__DIR__.'/../remedyBlood.php');
+    require_once (__DIR__.'/error.php');
     class Drugstore {
       public function __construct() {
         register_shutdown_function(array($this, 'shutdown'));

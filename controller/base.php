@@ -9,6 +9,8 @@
  */
 
     namespace Controller;
+    require_once ( __DIR__ . '/../lAtrium.php');
+    require_once ( __DIR__ . '/../remedyBlood.php');
 
     use \Heart\lAtrium as lAtrium;
 
@@ -65,7 +67,7 @@
         function __construct( $perm = true ) {
             $this->model = self::get_model();
             if ( $perm ) self::action();
-
+            
             $reflector = new \ReflectionClass(get_class($this));
             lAtrium::cancerFill( get_class($this), $reflector->getFileName() );
         }
@@ -122,7 +124,7 @@
 
             return true;
         }
-
+        
         /**
          * Returns object's ID that modified. This function can use when other controllers modify external objects
          *
@@ -161,7 +163,7 @@
             $this->deleteExt();
             header('Location:'.$this->location);
         }
-
+        
          public function deleteExt() {
             if ($_REQUEST['delete']) {
                 $_REQUEST['id'] = $_REQUEST['delete'];

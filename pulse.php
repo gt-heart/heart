@@ -1,5 +1,7 @@
 <?php
 
+    require_once (__DIR__.'/sos/drugstore.php');
+
     if (!empty($contexts))
         foreach ($contexts as $context) (!Pulse::plus($context))?: require_once(Pulse::plus($context));
 

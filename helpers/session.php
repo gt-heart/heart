@@ -1,4 +1,5 @@
 <?php
+    require_once(__DIR__.'/../controller/base.php');
 
     class Session extends \Controller\Base {
         public $location = '../views/users';

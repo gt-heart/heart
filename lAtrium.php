@@ -1,5 +1,6 @@
 <?php
     namespace Heart;
+    require_once(__DIR__.'/rAtrium.php');
 
     use \Heart\rAtrium as rAtrium;
 
@@ -9,7 +10,7 @@
             $rAtrium = new rAtrium();
             return $rAtrium->arterialBlood;
         }
-
+        
         /*
          * Ops, Heart can't die. It'll save classes with this function.
         */
@@ -19,7 +20,7 @@
             if ( $rAtrium->arterialBlood['autoLoad'] )
                 $rAtrium->diagnoseCancer($class, $location);
         }
-
+        
         /*
          * This function returns all classes and locations that Heart remember about your project.
         */
