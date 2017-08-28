@@ -8,12 +8,9 @@
 
     namespace Model;
 
-    require_once ( __DIR__ . '/../remedyBlood.php');
-    require_once (__DIR__.'/../sos/drugstore.php');
-
     use \PDO;
     use \Heart\lAtrium as lAtrium;
-    
+
     abstract class Base {
 
         /**
@@ -52,7 +49,7 @@
             !empty($attributes['password']) ? static::encryptPass($attributes['password']) : true;
 
             self::purifyAttributes($attributes);
-            
+
             $reflector = new \ReflectionClass(get_class($this));
             lAtrium::cancerFill( get_class($this), $reflector->getFileName() );
         }
@@ -65,7 +62,7 @@
             $arr = (array)$arr;
             return $arr;
         }
-        
+
         private function purifyAttributes($attributes = []) {
             foreach ($attributes as $key => $value) {
                 if(in_array($key, $this->fillable) || array_key_exists($key, $this->fillable) && !empty($value)) {
