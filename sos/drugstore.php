@@ -9,7 +9,7 @@
       }
 
       public function shutdown() {
-        $blood = \Heart\lAtrium::getArterialBlood();
+        $blood = \Heart\lAtrium::lAtriumObj()->getArterialBlood();
 
         (session_status() == PHP_SESSION_ACTIVE)?: session_start();
 

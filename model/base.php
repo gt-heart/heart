@@ -54,7 +54,7 @@
             self::purifyAttributes($attributes);
             
             $reflector = new \ReflectionClass(get_class($this));
-            lAtrium::cancerFill( get_class($this), $reflector->getFileName() );
+            lAtrium::lAtriumObj()->cancerFill( get_class($this), $reflector->getFileName() );
         }
         /**
          * This function converts any object in array.
@@ -91,7 +91,7 @@
          * @return object \PDO
          */
         protected static function connect() {
-            $blood = lAtrium::getArterialBlood();
+            $blood = lAtrium::lAtriumObj()->getArterialBlood();
             try {
                 $pdo = new \PDO('mysql:host='.$blood['host'].';dbname='.$blood["database"], $blood['user'], $blood['password'], array(\PDO::MYSQL_ATTR_INIT_COMMAND =>  'SET NAMES utf8'));
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -121,7 +121,7 @@
          * @return string
          */
         protected static function entity($isView = true) {
-            $blood = lAtrium::getArterialBlood();
+            $blood = lAtrium::lAtriumObj()->getArterialBlood();
 
             ($isView && $blood['useDbViews']) ? $suffix = self::DB_VIEW : $suffix = NULL;
             return lcfirst(get_called_class()).'s'.$suffix;

@@ -1,11 +1,32 @@
+; Host do Seu Banco de Dados
 host = "localhost"
-database = "ppgei"
+
+; Nome do Banco de Dados
+database = ""
+
+; Nome de User
 user = "root"
+
+; Senha do Usuario
 password = ""
+
+; 
 useDbViews = "false"
+
+; Pagina de Erro do Heart
 errorPage = "../heart/sos/ops.php"
+
+;
 isDebug = "true"
-autoLoad = "true"
-rootPage = "../views/login.php"
-homePage = "../views/users.php"
-escapePage = "../views/users.php"
+
+; Habilita o Carregamento de Classes Dinâmicamente se True
+autoLoad = "false"
+
+; Página Inicial do Projeto
+rootPage = "../views"
+
+; Página Inicial Pós-Login do Projeto
+homePage = "../views"
+
+;
+escapePage = "../views"

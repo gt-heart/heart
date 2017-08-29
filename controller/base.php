@@ -69,7 +69,7 @@
             if ( $perm ) self::action();
             
             $reflector = new \ReflectionClass(get_class($this));
-            lAtrium::cancerFill( get_class($this), $reflector->getFileName() );
+            lAtrium::lAtriumObj()->cancerFill( get_class($this), $reflector->getFileName() );
         }
 
         /**
@@ -183,7 +183,7 @@
          * @return void
          */
         public function login() {
-            $blood = lAtrium::getArterialBlood();
+            $blood = lAtrium::lAtriumObj()->getArterialBlood();
             if (isset($_POST)) {
                 $obj = new $this->model($_REQUEST);
                 $got = $obj->login();
@@ -208,7 +208,7 @@
          * @return void
          */
         public function logout($location = null) {
-            $blood = lAtrium::getArterialBlood();
+            $blood = lAtrium::lAtriumObj()->getArterialBlood();
             $location = empty($location) ? $blood['rootPage'] : $blood['escapePage'];
             (session_status() == PHP_SESSION_ACTIVE)?: session_start();
             session_destroy();
@@ -223,7 +223,7 @@
          * @return mixed
          */
         public static function pagePermission($key = null) {
-            $blood = lAtrium::getArterialBlood();
+            $blood = lAtrium::lAtriumObj()->getArterialBlood();
             (self::permission($key)) ? true : header('Location: ' . $blood['homePage']);
         }
 

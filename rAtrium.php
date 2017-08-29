@@ -41,6 +41,7 @@
                 $this->arterialBlood = self::purifyBlood(false);
             if ( $this->arterialBlood['autoLoad'] )
                 $this->dieBlood = self::purifyBlood(true);
+            $this->arterialBlood["bodyPath"] = realpath( __DIR__ . '/../' );
         }
 
         /**
@@ -84,7 +85,7 @@
 
         public function diagnoseCancer( $class , $location ) {
             $rAtrium = new rAtrium();
-
+            $location = str_replace($this->arterialBlood["bodyPath"], "", $location);
             if ( $rAtrium->dieBlood != null ) {
                 if ( !array_key_exists( $class, $rAtrium->dieBlood ) ) {
                     $rAtrium->dieBlood[$class] = $location;
