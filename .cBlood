@@ -1,0 +1,5 @@
+Session = "/var/www/html/ppgei/heart/helpers/session.php"
+User_controller = "/var/www/html/ppgei/controllers/user_controller.php"
+User = "/var/www/html/ppgei/models/user.php"
+Project_controller = "/var/www/html/ppgei/controllers/project_controller.php"
+Teacher_controller = "/var/www/html/ppgei/controllers/teacher_controller.php"

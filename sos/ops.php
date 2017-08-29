@@ -1,4 +1,4 @@
-<?php require_once(__DIR__.'/../helpers/session.php');?>
+<?php require_once(__DIR__.'/dieHeart.php');?>
 <!DOCTYPE html>
 <html>
   <head>
