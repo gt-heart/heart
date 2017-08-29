@@ -1,11 +1,11 @@
-host: 'localhost'
-database: 'project'
-user: 'root'
-password: ''
-useDbViews: 'false'
-errorPage: '../heart/sos/ops.php'
-isDebug: 'true'
-autoLoad: 'false'
-rootPage: '../'
-homePage: '../'
-escapePage: './'
+host = "localhost"
+database = "ppgei"
+user = "root"
+password = ""
+useDbViews = "false"
+errorPage = "../heart/sos/ops.php"
+isDebug = "true"
+autoLoad = "true"
+rootPage = "../views/login.php"
+homePage = "../views/users.php"
+escapePage = "../views/users.php"
