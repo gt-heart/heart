@@ -2,7 +2,7 @@
 host = "localhost"
 
 ; Nome do Banco de Dados
-database = ""
+database = "myDb"
 
 ; Nome de User
 user = "root"
@@ -22,11 +22,16 @@ isDebug = "true"
 ; Habilita o Carregamento de Classes Dinâmicamente se True
 autoLoad = "false"
 
+; Força o Reconhecimento de Todo o Projeto
+forceLoad = "false"
+
 ; Página Inicial do Projeto
-rootPage = "../views"
+rootPage = "../views/"
 
 ; Página Inicial Pós-Login do Projeto
-homePage = "../views"
+homePage = "../views/"
 
 ;
-escapePage = "../views"
+escapePage = "../views/"
+
+

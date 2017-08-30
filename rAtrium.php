@@ -37,11 +37,12 @@
         public $dieBlood = [];
 
         public function __construct() {
-            if ( isset($this->arterialBlood) )
-                $this->arterialBlood = self::purifyBlood(false);
-            if ( $this->arterialBlood['autoLoad'] )
-                $this->dieBlood = self::purifyBlood(true);
+            //if ( !($this->arterialBlood) )
+            $this->arterialBlood = self::purifyBlood(false);
             $this->arterialBlood["bodyPath"] = realpath( __DIR__ . '/../' );
+            if ( $this->arterialBlood['autoLoad'] ) {
+                $this->dieBlood = self::purifyBlood(true);
+            }
         }
 
         /**
@@ -51,19 +52,27 @@
         private function purifyBlood( $dieChange ) {
                 $circulation = null;
                 $circulation = $this->readVenous($dieChange);
+                if ( $circulation == null && $dieChange && $this->arterialBlood['forceLoad'] ) {
+                    $this->forceMedical();
+                    $circulation = $this->readVenous($dieChange);
+                }
                 if ( isset($circulation) ) {
-                    foreach ($circulation as $key => $value) {
-                        if ( $value === "true" || $value === "false" )
-                            $circulation[$key] = self::verifyBoolean($value);
-                    }
-
+                    foreach ($circulation as $key => $value)
+                        $circulation[$key] = self::verifyBoolean($value);
                     return $circulation;
                 }
         }
 
+        private function forceMedical() {
+            $files = glob($this->arterialBlood["bodyPath"] . "/[^heart][^views]*/*.php");
+            foreach ($files as $file) {
+                $this->diagnoseCancer( ucfirst(basename($file, ".php")), $file);
+            }
+        }
+
         private static function verifyBoolean($value) {
-            if ($value === 'false') return false;
-            if ($value === 'true') return true;
+            if ( strcasecmp($value, 'false') == 0 )  return false;
+            if ( strcasecmp($value, 'true') == 0 ) return true;
             return $value;
         }
 
@@ -84,18 +93,17 @@
         */
 
         public function diagnoseCancer( $class , $location ) {
-            $rAtrium = new rAtrium();
             $location = str_replace($this->arterialBlood["bodyPath"], "", $location);
-            if ( $rAtrium->dieBlood != null ) {
-                if ( !array_key_exists( $class, $rAtrium->dieBlood ) ) {
-                    $rAtrium->dieBlood[$class] = $location;
-                    file_put_contents($rAtrium->fileCancer, "{$class} = \"{$location}\"\n", FILE_APPEND);
-                } else if ( $rAtrium->dieBlood[$class] != $location ) {
-                    $rAtrium->dieBlood[$class] = $location;
-                    file_put_contents($rAtrium->fileCancer, self::killVirus($rAtrium->dieBlood) );
+            if ( $this->dieBlood != null ) {
+                if ( !array_key_exists( $class, $this->dieBlood ) ) {
+                    $this->dieBlood[$class] = $location;
+                    file_put_contents($this->fileCancer, "{$class} = \"{$location}\"\n", FILE_APPEND);
+                } else if ( $this->dieBlood[$class] != $location ) {
+                    $this->dieBlood[$class] = $location;
+                    file_put_contents($this->fileCancer, self::killVirus($this->dieBlood) );
                 }
             } else {
-                file_put_contents($rAtrium->fileCancer, "{$class} = \"{$location}\"\n", FILE_APPEND);
+                file_put_contents($this->fileCancer, "{$class} = \"{$location}\"\n", FILE_APPEND);
             }
         }
 

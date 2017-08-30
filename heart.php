@@ -8,10 +8,11 @@
      * Preparing Classes' Loading and Starting Execption Errors
      */
 
-    require_once(__DIR__ . '/controller/base.php');
     require_once(__DIR__ . '/model/base.php');
     require_once(__DIR__.'/rAtrium.php');
     require_once(__DIR__. '/lAtrium.php');
+    require_once(__DIR__ . '/remedyBlood.php');
+    require_once(__DIR__ . '/controller/base.php');
 
     if ( strpos( $_SERVER['PHP_SELF'], "views" ) !== false ) {
         require_once(__DIR__.'/sos/error.php');
