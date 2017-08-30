@@ -1,0 +1,12 @@
+; Arquivo de Cache para Carregamento de Classes
+; O Heart conhece o caminho do seu Projeto: 
+; 
+; diretorio/da/maquina/do/seu/projeto
+; 
+; Então a única informação que deve ser passada é o nome da Classe
+; e o caminho simplificado, sem o caminho do seu projeto.
+; veja o exemplo que deve ser seguido
+; caso deseje realizar uma pré-configuração:
+;
+; Class_controller = "/controllers/class_controller.php" 
+;
