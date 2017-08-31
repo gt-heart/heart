@@ -6,7 +6,7 @@
         public $actions = ['login', 'store', 'delete', 'logout'];
         public $fillneeded = ['name', 'email', 'level'];
 
-        
+
         function __construct( $perm = true ) {
             $this->model = self::get_model();
             if ( $perm ) self::action();
@@ -74,4 +74,4 @@
         }
     }
 
-    $session = new Session();
+    $session = new Session(false);

@@ -1,16 +1,11 @@
 <?php
 
-    require_once (__DIR__.'/sos/drugstore.php');
-
     if (!empty($contexts))
         foreach ($contexts as $context) (!Pulse::plus($context))?: require_once(Pulse::plus($context));
 
     (!Pulse::controller())?: require_once(Pulse::controller());
 
-    $helpers = scandir(__DIR__.'/helpers');
-
-    require_once (__DIR__.'/helpers/session.php');
-    require_once (__DIR__.'/helpers/print.php');
+    $Shelpers = scandir(__DIR__.'/helpers');
 
     class Pulse {
         private $uri;

@@ -1,4 +1,3 @@
-<?php require_once(__DIR__.'/dieHeart.php');?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -10,8 +9,8 @@
       The heart is not working right. :/
     </h1>
     <section>
-      <?php Session::msg(); ?>
-      <?php Session::errorPrint(); ?>
+      <?= $_COOKIE['HeartMsg'] ?? "Alarme Falso" ?>
+      <?= $_COOKIE['HeartError'] ?? "Calma, foi um erro falso!" ?>
     </section>
   </body>
 </html>
