@@ -52,7 +52,7 @@
         private function purifyBlood( $dieChange ) {
                 $circulation = null;
                 $circulation = $this->readVenous($dieChange);
-                if ( $circulation == null && $dieChange && $this->arterialBlood['forceLoad'] ) {
+                if ( $dieChange && ( null == $circulation || $this->arterialBlood['forceLoad'] ) ) {
                     $this->forceMedical();
                     $circulation = $this->readVenous($dieChange);
                 }
@@ -65,6 +65,7 @@
 
         private function forceMedical() {
             $files = glob($this->arterialBlood["bodyPath"] . "/[^heart][^views]*/*.php");
+            unlink($this->fileCancer);
             foreach ($files as $file) {
                 $this->diagnoseCancer( ucfirst(basename($file, ".php")), $file);
             }
