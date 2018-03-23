@@ -1,7 +1,5 @@
 <?php
     namespace SOS;
-    require_once (__DIR__.'/../lAtrium.php');
-    require_once (__DIR__.'/error.php');
 
     class Drugstore {
       public function __construct() {
@@ -9,25 +7,20 @@
       }
 
       public function shutdown() {
-        $blood = \Heart\lAtrium::getArterialBlood();
-
-        (session_status() == PHP_SESSION_ACTIVE)?: session_start();
+        $blood = \Heart\lAtrium::lAtriumObj()->getArterialBlood();
 
         $lastError = error_get_last();
 
-
         if ($blood['isDebug'] && !empty($lastError)) {
             $error = new \SOS\ErrorController($lastError);
-            $_SESSION['error'] = $error->htmlfyError();
+            setcookie("HeartError", $error->htmlfyError(), 0, "/");
         }
 
         if (!empty($lastError)) {
-            $_SESSION['msg'] = 'fail">OPA! Cuidado como brinca!';
-
+            setcookie('HeartMsg', 'fail>OPA! Cuidado como brinca!', 0, "/");
             header('Location:'.$blood['errorPage']);
         }
       }
     }
 
     new \SOS\Drugstore();
-?>

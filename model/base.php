@@ -8,12 +8,12 @@
 
     namespace Model;
 
-    require_once(__DIR__.'/../lAtrium.php');
+    require_once ( __DIR__ . '/../remedyBlood.php');
     require_once (__DIR__.'/../sos/drugstore.php');
 
     use \PDO;
     use \Heart\lAtrium as lAtrium;
-
+    
     abstract class Base {
 
         /**
@@ -24,11 +24,23 @@
         /**
          * Field list wich defines database fillables.
          * The attributes that are mass assignable.
-         *
+         * Relationship set the classes can call as attributes.
          * @var array
          */
         protected $fillable = [];
-
+        protected $relationship = [];
+        /**
+         * Create dynamic objects attributes when it's called.
+         * This's works only with simple call between objects.
+        */
+        function __get($key) {
+            if(in_array($key, $this->relationship) || array_key_exists($key, $this->relationship) ) {
+                $value = $key . "s_id";
+                return ucfirst($key)::one($this->$value);
+            } else {
+                return $this->$key;
+            }
+        }
         /**
          * Generic dynamic construct for models
          * @param array $attributes [field list for search on database table/view]
@@ -40,9 +52,20 @@
             !empty($attributes['password']) ? static::encryptPass($attributes['password']) : true;
 
             self::purifyAttributes($attributes);
-
+            
+            $reflector = new \ReflectionClass(get_class($this));
+            lAtrium::lAtriumObj()->cancerFill( get_class($this), $reflector->getFileName() );
         }
-
+        /**
+         * This function converts any object in array.
+         */
+        protected function objectRayX() {
+            $arr = clone $this;
+            unset($arr->relationship);
+            $arr = (array)$arr;
+            return $arr;
+        }
+        
         private function purifyAttributes($attributes = []) {
             foreach ($attributes as $key => $value) {
                 if(in_array($key, $this->fillable) || array_key_exists($key, $this->fillable) && !empty($value)) {
@@ -68,7 +91,7 @@
          * @return object \PDO
          */
         protected static function connect() {
-            $blood = lAtrium::getArterialBlood();
+            $blood = lAtrium::lAtriumObj()->getArterialBlood();
             try {
                 $pdo = new \PDO('mysql:host='.$blood['host'].';dbname='.$blood["database"], $blood['user'], $blood['password'], array(\PDO::MYSQL_ATTR_INIT_COMMAND =>  'SET NAMES utf8'));
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -98,7 +121,7 @@
          * @return string
          */
         protected static function entity($isView = true) {
-            $blood = lAtrium::getArterialBlood();
+            $blood = lAtrium::lAtriumObj()->getArterialBlood();
 
             ($isView && $blood['useDbViews']) ? $suffix = self::DB_VIEW : $suffix = NULL;
             return lcfirst(get_called_class()).'s'.$suffix;
@@ -145,13 +168,11 @@
             $stm->execute();
             return $stm->fetch(PDO::FETCH_OBJ);
         }
-
         /**
          *
          */
         public static function selectIt($clauses = [], $order = null, $limit = null) {
             $where = null;
-
             foreach ($clauses as $key => $value) {
                 if (!empty($value))
                     $where .= (!empty($where))? ' AND ' . $key . ' = :' . $key: $key . ' = :' . $key;
@@ -176,7 +197,7 @@
          */
         public function insert() {
             $connect = self::connect();
-            $attr = (array)$this;
+            $attr = $this->objectRayX();
             $stm = $connect->prepare('INSERT INTO `'.self::entity(false).'`('.implode(',  ', array_keys($attr)).', createdAt, updatedAt) VALUES (:'.implode(', :', array_keys($attr)).', NOW(), NOW())');
             $stm->execute($attr);
             return $connect->lastInsertId();
@@ -189,7 +210,7 @@
          */
         public function update() {
             $connect = self::connect();
-            $attr = (array)$this;
+            $attr = $this->objectRayX();
             $sets = '';
             foreach ($attr as $key => $value) {
                 $sets .= $key . ' = :' . $key . ', ';

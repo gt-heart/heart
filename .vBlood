@@ -1,10 +1,37 @@
-host: 'localhost'
-database: 'project'
-user: 'root'
-password: ''
-useDbViews: 'false'
-errorPage: '../heart/sos/ops.php'
-isDebug: 'true'
-rootPage: '../'
-homePage: '../'
-escapePage: './'
+; Host do Seu Banco de Dados
+host = "localhost"
+
+; Nome do Banco de Dados
+database = "myDb"
+
+; Nome de User
+user = "root"
+
+; Senha do Usuario
+password = ""
+
+; 
+useDbViews = "false"
+
+; Pagina de Erro do Heart
+errorPage = "../heart/sos/ops.php"
+
+;
+isDebug = "true"
+
+; Habilita o Carregamento de Classes Dinâmicamente se True
+autoLoad = "false"
+
+; Força o Reconhecimento de Todo o Projeto
+forceLoad = "false"
+
+; Página Inicial do Projeto
+rootPage = "../views/"
+
+; Página Inicial Pós-Login do Projeto
+homePage = "../views/"
+
+;
+escapePage = "../views/"
+
+

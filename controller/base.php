@@ -9,8 +9,8 @@
  */
 
     namespace Controller;
-
-    require_once(__DIR__.'/../lAtrium.php');
+    require_once ( __DIR__ . '/../lAtrium.php');
+    require_once ( __DIR__ . '/../remedyBlood.php');
 
     use \Heart\lAtrium as lAtrium;
 
@@ -31,7 +31,7 @@
          * It can be overloaded by each controller
          *
          */
-        public $actions = ['delete', 'store', 'logout'];
+        public $actions = ['delete', 'store', 'logout', 'storeExt', 'deleteExt'];
 
         /**
          *
@@ -64,9 +64,12 @@
         /**
          * Generic construct for controllers
          */
-        function __construct() {
+        function __construct( $perm = true ) {
             $this->model = self::get_model();
-            self::action();
+            if ( $perm ) self::action();
+            
+            $reflector = new \ReflectionClass(get_class($this));
+            lAtrium::lAtriumObj()->cancerFill( get_class($this), $reflector->getFileName() );
         }
 
         /**
@@ -121,13 +124,13 @@
 
             return true;
         }
-
+        
         /**
-         * Controls what happens on system when an database line is inserted or updated
+         * Returns object's ID that modified. This function can use when other controllers modify external objects
          *
-         * @return void
+         * @return int
          */
-        public function store() {
+        public function storeExt() {
             if (self::is_valid()) {
                 $obj = new $this->model($_REQUEST);
                 try {
@@ -139,15 +142,29 @@
             } else {
                 $_SESSION['msg'] = 'fail">Por favor, preencha os campos obrigatórios. ' . $_SESSION['msg'];
             }
-            header('Location:'.$this->location);
+            if ( isset($result) ) return $result;
         }
 
+        /**
+         * Controls what happens on system when an database line is inserted or updated
+         *
+         * @return void
+         */
+        public function store() {
+            $this->storeExt();
+            header('Location:'.$this->location);
+        }
         /**
          * Controls what happens on system when an database line is deleted
          *
          * @return void
          */
         public function delete() {
+            $this->deleteExt();
+            header('Location:'.$this->location);
+        }
+        
+         public function deleteExt() {
             if ($_REQUEST['delete']) {
                 $_REQUEST['id'] = $_REQUEST['delete'];
                 $obj = new $this->model($_REQUEST);
@@ -158,8 +175,7 @@
                     $_SESSION['msg'] = 'fail">Houve um erro. Por favor, tente novamente.';
                 }
             }
-            header('Location:'.$this->location);
-        }
+         }
 
         /**
          * Controls what happens on system when an user login have success or failure
@@ -167,7 +183,7 @@
          * @return void
          */
         public function login() {
-            $blood = lAtrium::getArterialBlood();
+            $blood = lAtrium::lAtriumObj()->getArterialBlood();
             if (isset($_POST)) {
                 $obj = new $this->model($_REQUEST);
                 $got = $obj->login();
@@ -192,7 +208,7 @@
          * @return void
          */
         public function logout($location = null) {
-            $blood = lAtrium::getArterialBlood();
+            $blood = lAtrium::lAtriumObj()->getArterialBlood();
             $location = empty($location) ? $blood['rootPage'] : $blood['escapePage'];
             (session_status() == PHP_SESSION_ACTIVE)?: session_start();
             session_destroy();
@@ -207,7 +223,7 @@
          * @return mixed
          */
         public static function pagePermission($key = null) {
-            $blood = lAtrium::getArterialBlood();
+            $blood = lAtrium::lAtriumObj()->getArterialBlood();
             (self::permission($key)) ? true : header('Location: ' . $blood['homePage']);
         }
 
@@ -237,6 +253,7 @@
 
             if (isset($_REQUEST['action']) && in_array($_REQUEST['action'], $this->actions)) {
                 $action = $_REQUEST['action'];
+                unset($_REQUEST['action']);
                 if (in_array($action, $this->actions)) $this->$action();
             }
         }
